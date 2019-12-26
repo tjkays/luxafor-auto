@@ -1,0 +1,10 @@
+[Unit]
+Description=Luxafor auto management
+
+[Service]
+WorkingDirectory=/opt/lux-auto
+Type=simple
+ExecStart=python /opt/lux-auto/luxafor-auto
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+#! /bin/bash
+
+echo "Copying files.."
+sudo cp -rf . /opt/
+sudo chown -R $USER:$USER /opt/lux-auto/
+echo "Done!"
+
+echo "Setting up daemon.."
+sudo cp -f ./sys/lux-auto.service /etc/systemd/system/
+sudo systemctl enable lux-auto
+sudo systemctl start lux-auto
+sudo systemctl status lux-auto
+echo "Done!"
+
+echo "Setup complete. Please check for any errors or warnings."
