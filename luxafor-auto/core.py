@@ -1,12 +1,14 @@
+import os
 import time
 from colour import Color
-from . import lux
+from lux import Lux
 
 def run():
-    while true:
-        device_status = os.system("cat /proc/asound/card*/pcm0p/sub0/status");
+    while True:
+        device_status = os.popen('cat /proc/asound/card*/pcm0p/sub0/status').read()
+        lux = Lux()
         if device_status.find("RUNNING") != -1:
-            color = Color(rgb=(255,0,0))
+            color = Color(rgb=(1,0,0))
             options = {
                 "action": "strobe",
                 "led": 255,
@@ -15,7 +17,7 @@ def run():
             }
             lux.setLight(color, options)
         else:
-            color = Color(rgb=(0,255,0))
+            color = Color(rgb=(0,1,0))
             options = {
                 "action": "color",
                 "led": 255,

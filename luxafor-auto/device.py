@@ -4,7 +4,7 @@ class Device:
     def __init__(self, device):
         self.device = device
 
-    def setupDevice():
+    def setupDevice(self):
         self.device = usb.core.find(idVendor=0x04d8, idProduct=0xf372)
 
         # Device found?
@@ -15,7 +15,7 @@ class Device:
         # Otherwise trying to interact with the device gives a 'Resource Busy' error.
         try:
           self.device.detach_kernel_driver(0)
-        except Exception, e:
+        except Exception:
           pass
          
         self.device.set_configuration()
