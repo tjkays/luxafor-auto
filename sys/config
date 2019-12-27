@@ -1,0 +1,13 @@
+[Running]
+Color = "250, 165, 45"
+[[Options]]
+action = strobe
+led = 255
+speed = 120
+repeat = 255
+
+[Idle]
+Color = "0, 255, 0"
+[[Options]]
+action = color
+led = 255
