@@ -4,7 +4,7 @@ Description=Luxafor auto management
 [Service]
 WorkingDirectory=/opt/lux-auto
 Type=simple
-ExecStart=python /opt/lux-auto/luxafor-auto
+ExecStart=/usr/local/bin/lux-auto
 
 [Install]
 WantedBy=multi-user.target

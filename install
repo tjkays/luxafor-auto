@@ -1,15 +1,101 @@
-#! /bin/bash
+#!/bin/bash
 
-echo "Copying files.."
-sudo cp -rf `pwd` /opt/
-sudo chown -R $USER:$USER /opt/lux-auto/
-echo "Done!"
+#Pre-flight checks
+if ! [[ -d "/etc/systemd/system" ]]
+then
+    echo "System compatibility issue!"
+    echo
+    exit 1
+fi
 
-echo "Setting up daemon.."
-sudo cp -f ./sys/lux-auto.service /etc/systemd/system/
-sudo systemctl enable lux-auto
-sudo systemctl start lux-auto
-sudo systemctl status lux-auto
-echo "Done!"
+#Setup paths
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+CONFIG_DIR=/opt/lux-auto
+PATH_DIR=/usr/local/bin
+cd $DIR
 
+#Remove any existing install files
+read -p "This will remove any existing lux-auto files or configurations and replace them. Continue? [y/n]" -n 1 -r
+echo
+if ! [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo "Cancelled."
+    echo
+    exit 1
+fi
+sudo rm -rf $CONFIG_DIR
+sudo rm -f $PATH_DIR/lux-auto
+sudo pip3 uninstall luxafor_auto
+
+#Disable and remove any existing daemon
+if [ -f "/etc/systemd/system/lux-auto.service" ]
+then
+    sudo systemctl disable lux-auto
+    sudo systemctl stop lux-auto
+    sudo rm -f /etc/systemd/system/lux-auto.service
+fi
+
+#Install python module
+echo "Installing python module.."
+sudo make init
+sudo pip3 install $DIR
+echo "Done"
+
+#Copy necessary configs to /opt
+echo "Setting up lux-auto system files.."
+sudo mkdir -p $CONFIG_DIR/sys
+sudo cp -f $DIR/sys/config $CONFIG_DIR/sys/
+sudo chown -R root:root $CONFIG_DIR
+
+#Create $PATH_DIR if it doesn't exist
+if [ ! -d "$PATH_DIR" ]; then
+    sudo mkdir -p $PATH_DIR
+    sudo chown root:root $PATH_DIR
+    sudo chmod 755 $PATH_DIR
+fi
+
+#Setup binary in $PATH_DIR
+sudo cp -f $DIR/sys/lux-auto $PATH_DIR/lux-auto
+sudo chmod +x $PATH_DIR/lux-auto
+sudo chown root:root $PATH_DIR/lux-auto
+echo "Done"
+
+#Setup $PATH_DIR in path if necessary
+if [[ ":$PATH:" != *":$PATH_DIR:"* ]]; then
+    read -p "Add $PATH_DIR to path? (this will write to ~/.bashrc) [y/n]" -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        touch ~/.bashrc
+        echo "export PATH=\$PATH:$PATH_DIR" >> ~/.bashrc
+        source ~/.bashrc
+    fi
+fi
+
+#Setup daemon
+sudo cp -f $DIR/sys/lux-auto.service /etc/systemd/system/
+read -p "Start lux-auto daemon? [y/n]" -n 1 -r
+echo
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo systemctl start lux-auto
+fi
+read -p "Reload daemons? [y/n]" -n 1 -r
+echo
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo systemctl daemon-reload
+fi
+read -p "Start lux-auto on startup? [y/n]" -n 1 -r
+echo
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo systemctl enable lux-auto
+fi
+
+#Completion status
+systemctl status lux-auto
 echo "Setup complete. Please check for any errors or warnings."

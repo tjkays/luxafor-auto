@@ -8,7 +8,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='luxafor-auto',
+    name='luxafor_auto',
     version='0.1.0',
     description='Luxafor auto management',
     long_description=readme,

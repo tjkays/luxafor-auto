@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+import sys
+
+from luxafor_auto import core
+
+try:
+    core.run()
+except KeyboardInterrupt:
+    sys.exit("\nCanceling.")

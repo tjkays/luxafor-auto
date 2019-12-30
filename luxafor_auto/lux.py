@@ -1,5 +1,5 @@
-from color import Color
-from device import Device
+from luxafor_auto.color import Color
+from luxafor_auto.device import Device
 
 class Lux:
     def __init__(self):

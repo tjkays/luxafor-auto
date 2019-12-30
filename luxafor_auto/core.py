@@ -1,14 +1,19 @@
+#stdLib
 import os
 import time
+
+#3rd party
 from configobj import ConfigObj
-from color import Color
-from lux import Lux
+
+#local
+from luxafor_auto.lux import Lux
+from luxafor_auto.color import Color
 
 def run():
     running = False
 
-    dirname = os.path.dirname(__file__)
-    config_file = os.path.join(dirname, '../sys/config')
+    dirname = os.path.dirname('/opt/lux-auto/')
+    config_file = os.path.join(dirname, 'sys/config')
     config = ConfigObj(config_file)
 
     lux = Lux()
