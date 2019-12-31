@@ -8,6 +8,8 @@ class Lux:
         self.color = Color("0,0,0")
 
     def setLight(self, color, options): 
+        if not self.device.isConnected():
+            return False
         led = int(options["led"])  
         action = options["action"]
         self.color = color

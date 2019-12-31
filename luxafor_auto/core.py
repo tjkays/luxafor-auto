@@ -42,4 +42,15 @@ def run():
                     config["Idle"]["Options"]
                 )
                 running = False
-        time.sleep(.1)
+        time.sleep(.75)
+
+def kill():
+    dirname = os.path.dirname('/opt/lux-auto/')
+    config_file = os.path.join(dirname, 'sys/config')
+    config = ConfigObj(config_file)
+
+    lux = Lux()
+    lux.setLight(
+        Color("0,0,0"),
+        config["Idle"]["Options"]
+    )

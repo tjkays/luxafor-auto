@@ -1,10 +1,14 @@
 [Unit]
 Description=Luxafor auto management
+After=syslog.target
 
 [Service]
-WorkingDirectory=/opt/lux-auto
 Type=simple
-ExecStart=/usr/local/bin/lux-auto
+WorkingDirectory=/opt/lux-auto
+ExecStart=/usr/local/bin/lux-auto start
+ExecStopPost=/usr/local/bin/lux-auto stop
+StandardOutput=syslog
+StandardError=syslog
 
 [Install]
 WantedBy=multi-user.target

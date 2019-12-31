@@ -4,7 +4,14 @@ import sys
 
 from luxafor_auto import core
 
-try:
-    core.run()
-except KeyboardInterrupt:
-    sys.exit("\nCanceling.")
+command = sys.argv[1]
+
+if command == "start":
+    try:
+        core.run()
+    except KeyboardInterrupt:
+        core.kill()
+        sys.exit("\nCanceling.")
+elif command == "stop":
+    core.kill()
+    sys.exit("\nStopping normally")
