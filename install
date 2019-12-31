@@ -15,7 +15,7 @@ PATH_DIR=/usr/local/bin
 cd $DIR
 
 #Remove any existing install files
-read -p "This will remove any existing lux-auto files or configurations and replace them. Continue? [y/n]" -n 1 -r
+read -p "This will remove any existing lux-auto files and replace them. Any existing configuration files will be backed up in $CONFIG_DIR/sys/ Continue? [y/n] " -n 1 -r
 echo
 if ! [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -23,9 +23,15 @@ then
     echo
     exit 1
 fi
-sudo rm -rf $CONFIG_DIR
+
 sudo rm -f $PATH_DIR/lux-auto
 sudo pip3 uninstall luxafor_auto
+
+#Backup config if exists
+if [ -f $CONFIG_DIR/sys/config ]
+then
+    sudo cp -f $CONFIG_DIR/sys/config $CONFIG_DIR/sys/config-$(date +%s)
+fi
 
 #Disable and remove any existing daemon
 if [ -f "/etc/systemd/system/lux-auto.service" ]
@@ -62,7 +68,7 @@ echo "Done"
 
 #Setup $PATH_DIR in path if necessary
 if [[ ":$PATH:" != *":$PATH_DIR:"* ]]; then
-    read -p "Add $PATH_DIR to path? (this will write to ~/.bashrc) [y/n]" -n 1 -r
+    read -p "Add $PATH_DIR to path? (this will write to ~/.bashrc) [y/n] " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
@@ -74,22 +80,19 @@ fi
 
 #Setup daemon
 sudo cp -f $DIR/sys/lux-auto.service /etc/systemd/system/
-read -p "Start lux-auto daemon? [y/n]" -n 1 -r
-echo
+read -p "Start lux-auto daemon? [y/n] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     sudo systemctl start lux-auto
 fi
-read -p "Reload daemons? [y/n]" -n 1 -r
-echo
+read -p "Reload daemons? [y/n] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     sudo systemctl daemon-reload
 fi
-read -p "Start lux-auto on startup? [y/n]" -n 1 -r
-echo
+read -p "Start lux-auto on startup? [y/n] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
