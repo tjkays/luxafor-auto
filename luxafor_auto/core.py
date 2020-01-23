@@ -7,7 +7,6 @@ from configobj import ConfigObj
 
 #local
 from luxafor_auto.lux import Lux
-from luxafor_auto.color import Color
 
 def run():
     running = False
@@ -18,7 +17,7 @@ def run():
 
     lux = Lux()
     lux.setLight(
-        Color(config["Idle"]["Color"]), 
+        config["Idle"]["Color"], 
         config["Idle"]["Options"]
     )
 
@@ -27,7 +26,7 @@ def run():
         if device_status.find("RUNNING") != -1:
             if running == False:
                 lux.setLight(
-                    Color(config["Running"]["Color"]), 
+                    config["Running"]["Color"], 
                     config["Running"]["Options"]
                 )
                 running = True
@@ -38,7 +37,7 @@ def run():
                     "led": 255,
                 }
                 lux.setLight(
-                    Color(config["Idle"]["Color"]), 
+                    config["Idle"]["Color"], 
                     config["Idle"]["Options"]
                 )
                 running = False
@@ -51,6 +50,6 @@ def kill():
 
     lux = Lux()
     lux.setLight(
-        Color("0,0,0"),
+        {"red": 0, "green": 0, "blue": 0},
         config["Idle"]["Options"]
     )

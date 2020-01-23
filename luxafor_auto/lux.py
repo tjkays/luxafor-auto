@@ -1,11 +1,10 @@
-from luxafor_auto.color import Color
 from luxafor_auto.device import Device
 
 class Lux:
     def __init__(self):
         self.device = Device(None)
         self.device.setupDevice()
-        self.color = Color("0,0,0")
+        self.color = {"red": 0, "green": 0, "blue", 0}
 
     def setLight(self, color, options): 
         if not self.device.isConnected():
